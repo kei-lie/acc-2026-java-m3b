@@ -61,12 +61,24 @@ public class ConsoleMenu {
             return;
         }
 
-        System.out.println("Item name:");
-        String itemName = scanner.nextLine().trim();
+        String itemName = "";
+        do{
+            System.out.println("Item name:");
+            itemName = scanner.nextLine().trim();
 
-        System.out.println("Price:");
-        double price = Double.parseDouble(scanner.nextLine().trim());
+            if(itemName.isEmpty()){
+                System.out.println("Item name cannot be blank!");
+            }
+        }while(itemName.isEmpty());
 
+        double price;
+        do {
+            System.out.println("Price:");
+            price = Double.parseDouble(scanner.nextLine().trim());
+            if(price <= 0){
+                System.out.println("Price can't be 0 or less");
+            }
+        }while(price <= 0);
         System.out.println("Quantity:");
         int quantity = Integer.parseInt(scanner.nextLine().trim());
 
@@ -161,7 +173,7 @@ public class ConsoleMenu {
             }
             System.out.println("Email address is required.");
         }
-        return new PaypalPayment(email);
+        return PaymentMethodFactory.createPayPalPayment(email);
     }
 
     private PaymentMethod createGiftCardPayment() {
@@ -189,7 +201,7 @@ public class ConsoleMenu {
             System.out.println("Enter a valid non-negative number for balance.");
         }
 
-        return new GiftCardPayment(code, balance);
+        return PaymentMethodFactory.createGiftCardPayment(code, balance);
     }
 
     private PaymentMethod createBankTransferPayment() {

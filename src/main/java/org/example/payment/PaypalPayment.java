@@ -7,11 +7,17 @@ public class PaypalPayment extends PaymentMethod {
 
     public PaypalPayment(String email) {
         super("PayPal");
-        this.email = email;
+        if (email == null || email.isBlank() || !email.contains("@")) {
+            throw new IllegalArgumentException("Invalid PayPal email address");
+        }
+        this.email = email.trim();
     }
 
     @Override
     public PaymentResult processPayment(double amount) {
-        return new PaymentResult(true, "Paid " + amount + " using PayPal");
+        if (amount <= 0) {
+            return new PaymentResult(false, "Payment amount must be greater than zero");
+        }
+        return new PaymentResult(true, "Paid " + amount + " using PayPal (" + email + ")");
     }
 }
